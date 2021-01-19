@@ -16,27 +16,72 @@ import { useState } from "react";
 function EightBall({answers}) {
   const [backgroundColor, setBackgroundColor] = useState("black");
   const [message, setMessage] = useState("Think of a Question");
+  const [countRed, setCountRed] = useState(0);
+  const [countGreen, setCountGreen] = useState(0);
+  const [countGoldenRod, setCountGoldenRod] = useState(0);
+
 
   const styles = {
     borderRadius: "50%",
     backgroundColor,
     color: "white",
+    display: "flex",
+    flexDirection: "column",
     textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "300px",
+    height: "300px",
   };
 
   // Docstring
   function handleClick() {
     const index = Math.floor(Math.random() * answers.length);
     // Destructure
-    const color = answers[index].color;
-    const msg = answers[index].msg;
+    const {color, msg} = answers[index];
     setBackgroundColor(color);
     setMessage(msg);
+
+    setColorCounts();
+  }
+  
+  /* Event handler function for reset button click.
+  Resets the eightball to default 
+  - backGroundColor: black, message: "Think of a Question" */
+  function handleResetClick() {
+    setBackgroundColor("black");
+    setMessage("Think of a Question");
+    setColorCounts();
+  }
+
+  /* Helper function to increase color counts.*/  
+  function setColorCounts() {
+    if (backgroundColor === "green") {
+      setCountRed(countRed);
+      setCountGreen(countGreen + 1);
+      setCountGoldenRod(countGoldenRod);
+    } else if (backgroundColor === "red") {
+      setCountRed(countRed + 1);
+      setCountGreen(countGreen);
+      setCountGoldenRod(countGoldenRod);
+    } else if (backgroundColor === "goldenrod") {
+      setCountRed(countRed);
+      setCountGreen(countGreen);
+      setCountGoldenRod(countGoldenRod + 1);
+    } else {
+      setCountRed(countRed);
+      setCountGreen(countGreen);
+      setCountGoldenRod(countGoldenRod);
+    }
   }
 
   return (
-    <div onClick={handleClick} className="EightBall" style={styles}>
-      <p className='EightBall-message'>{message}</p>
+    <div className="EightBall" style={styles}> 
+      <p className="EightBall-counts">Green: {countGreen}, Red: {countRed}, GoldenRod: {countGoldenRod} </p>
+      <div onClick={handleClick} className="Eightball-display" >
+        <p className='EightBall-message'>{message}</p>
+      </div>
+      <button className="Eightball-reset" onClick={handleResetClick}>Reset</button>
     </div>
   )
 }
